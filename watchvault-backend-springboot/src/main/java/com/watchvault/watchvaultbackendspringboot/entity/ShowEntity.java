@@ -28,7 +28,7 @@ public class ShowEntity {
     private LocalDate releaseDate;
 
     @Lob
-    @Column(columnDefinition = "NVARCHAR(MAX)")
+    @Column(columnDefinition = "TEXT")
     private String image;
 
     @Column(nullable = false)
