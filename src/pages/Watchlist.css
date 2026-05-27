@@ -1,0 +1,12 @@
+.watchlist-page {
+  display: flex;
+  min-height: 100vh;
+  background: #0b0b0b;
+  color: #fff;
+}
+
+/* MAIN CONTENT */
+.main-view {
+  flex: 1;
+  padding: 40px 60px;
+}

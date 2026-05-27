@@ -1,0 +1,147 @@
+.watch-table table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 20px;
+  overflow: visible;
+}
+
+/* HEADER */
+.watch-table thead tr {
+  background: #b30000;
+}
+
+.watch-table th {
+  text-align: left;
+  padding: 12px 20px;
+  font-weight: 600;
+}
+
+/* ROWS */
+.watch-table td {
+  text-align: left;
+  padding: 14px 20px;
+  color: #ddd;
+  background: #0e0e0e;
+}
+
+/* ROW BOX EFFECT */
+.watch-table tbody tr {
+  outline: 1px solid #222;
+  position: relative;
+  transition: transform 0.16s ease, outline-color 0.16s ease;
+}
+
+.title-cell {
+  position: relative;
+}
+
+.row-poster-preview {
+  position: absolute;
+  left: -112px;
+  top: 50%;
+  width: 90px;
+  height: 135px;
+  transform: translate(0, -50%) scale(0.96);
+  opacity: 0;
+  pointer-events: none;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #3b3b3b;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+  transition: opacity 0.16s ease, transform 0.16s ease;
+  z-index: 5;
+  background: #111;
+}
+
+.row-poster-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.watch-table tbody tr:hover .row-poster-preview {
+  opacity: 1;
+  transform: translate(-8px, -50%) scale(1);
+}
+
+.watch-table tbody tr td:first-child {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.watch-table tbody tr td:last-child {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+/* HOVER EFFECT */
+.watch-table tbody tr:hover {
+  transform: translateY(-1px);
+  outline-color: #2d2d2d;
+}
+
+.watch-table tbody tr:hover td {
+  background: #121212;
+}
+
+.watch-table tbody tr.clickable-row {
+  cursor: pointer;
+}
+
+.watch-table tbody tr.clickable-row:focus-visible {
+  outline: 2px solid #c40000;
+  outline-offset: -2px;
+}
+
+.empty-row {
+  text-align: center;
+  color: #aaa;
+  background: #0e0e0e;
+}
+
+.table-pagination {
+  margin-top: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.table-pagination p {
+  color: #aaa;
+  font-size: 14px;
+}
+
+.pagination-controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pagination-controls button {
+  background: #121212;
+  color: #ddd;
+  border: 1px solid #333;
+  border-radius: 6px;
+  min-width: 36px;
+  height: 34px;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+
+.pagination-controls button.active {
+  background: #b30000;
+  border-color: #b30000;
+  color: #fff;
+}
+
+.pagination-controls button:disabled {
+  opacity: 0.5;
+}
+
+@media (max-width: 1024px) {
+  .row-poster-preview {
+    display: none;
+  }
+}

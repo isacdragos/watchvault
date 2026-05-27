@@ -1,0 +1,84 @@
+.sidebar {
+  width: 220px;
+  margin-left: 40px;
+  margin-top: 80px;
+
+  padding: 25px 20px;
+
+  height: calc(100vh - 450px); /* full height minus navbar */
+  position: sticky;
+  top: 80px; /* same as navbar height */
+
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar p {
+  color: #aaa;
+  margin-bottom: 10px;
+}
+
+/* SORT DROPDOWN */
+.sort-by select {
+  width: 100%;
+  padding: 9px;
+  margin-bottom: 15px;
+  background: #111;
+  color: #fff;
+  border: 1px solid #333;
+  font-size: 15px;
+}
+
+/* TYPE BUTTONS */
+.filter-type button {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 8px;
+  background: transparent;
+  border: 1px solid #444;
+  color: #ddd;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: 0.2s;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.filter-type button:hover {
+  border-color: #ff0000;
+  color: white;
+}
+
+/* ACTIVE TYPE */
+.filter-type button.active {
+  background: #b30000;
+  border-color: #b30000;
+  color: white;
+}
+
+/* ADD BUTTON */
+.add-to-list {
+  margin-top: 20px;
+  width: 100%;
+  padding: 10px;
+  background: #b30000;
+  border: none;
+  color: white;
+  font-weight: bold;
+  font-size: 15px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-to-list:hover {
+  background: red;
+}
+
+.sort-by {
+  margin-bottom: 30px;
+}
+
+/* TYPE FILTER SECTION */
+.filter-type {
+  margin-bottom: 30px;
+}

@@ -1,0 +1,105 @@
+.admin-page {
+  background: radial-gradient(circle at top, #ff000014, transparent 26%), #111;
+  min-height: calc(100vh - 93px);
+  padding: 48px 24px 72px;
+}
+
+.admin-card {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  padding: 28px;
+  background: rgba(10, 10, 10, 0.94);
+  border: 1px solid #3d3d3d;
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.28);
+}
+
+.admin-header {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.admin-kicker {
+  margin: 0;
+  color: #ff5555;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.76rem;
+}
+
+.admin-header h1 {
+  margin: 0;
+  color: #f4f4f4;
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.admin-subtitle,
+.admin-message,
+.admin-error {
+  margin: 0;
+  color: #c7c7c7;
+}
+
+.admin-error {
+  color: #ff8b8b;
+}
+
+.admin-table-wrap {
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #ededed;
+}
+
+.admin-table th,
+.admin-table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 14px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.admin-table th {
+  color: #9a9a9a;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.9rem;
+}
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.admin-button {
+  border: 1px solid rgba(255, 77, 77, 0.45);
+  background: transparent;
+  color: #f7f7f7;
+  border-radius: 999px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+.admin-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.admin-button-danger {
+  color: #ffb1b1;
+  border-color: rgba(255, 40, 40, 0.7);
+}
+
+@media (max-width: 720px) {
+  .admin-page {
+    padding: 24px 12px 48px;
+  }
+
+  .admin-card {
+    padding: 18px;
+  }
+}

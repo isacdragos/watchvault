@@ -1,0 +1,33 @@
+/* Make body and html fill the viewport */
+html,
+body {
+  background-color: #111;
+}
+#root,
+.app-container {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #111; /* dark background to blend with hero */
+}
+
+/* Make hero section cover the entire screen area */
+.hero {
+  width: 100%;
+  min-height: 100vh; /* full screen height */
+  margin-top: -70px; /* space for navbar */
+}
+
+.hero-box {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 80px;
+  background: linear-gradient(
+      rgba(0, 0, 0, 0.6),
+      rgba(0, 0, 0, 0.6)
+    ),
+    url("/bannersite2.png") center/cover no-repeat;
+}
