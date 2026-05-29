@@ -164,7 +164,14 @@ Open the Vite URL shown in the terminal, usually:
 https://localhost:5173
 ```
 
-Note: You might need to edit `watchvault-backend-springboot/src/main/resources/application.properties` so that `server.ssl.enabled=true` and generate a valid ssl certificate or edit `watchvault/.env` `watchvault/tests/client/authApi.test.js` `watchvault/vite.config.js` so that all instances of https are http.
+Note: `watchvault-backend-springboot/src/main/resources/application.properties` might need changes so that an ssl certificate may be used. A good configuration could look like this:
+```properties
+server.ssl.enabled=true
+server.ssl.key-store=classpath:ssl/watchvault-local.p12
+server.ssl.key-store-password=watchvault
+server.ssl.key-store-type=PKCS12
+server.ssl.key-alias=watchvault-local
+```
 
 ## Production Build
 
