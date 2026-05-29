@@ -164,7 +164,7 @@ Open the Vite URL shown in the terminal, usually:
 https://localhost:5173
 ```
 
-This project contains a local certificate file used by Vite. If your browser warns about the certificate, accept it for local development.
+Note: You might need to edit `watchvault-backend-springboot/src/main/resources/application.properties` so that `server.ssl.enabled=true` and generate a valid ssl certificate or edit `watchvault/.env` `watchvault/tests/client/authApi.test.js` `watchvault/vite.config.js` so that all instances of https are http.
 
 ## Production Build
 
