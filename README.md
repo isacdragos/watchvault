@@ -251,5 +251,5 @@ Only users with the `ADMIN` role can open `/admin`. The first account created in
 
 ## Development Notes
 
-- `watchvault-backend-springboot` is the main backend that the app runs on. `backend-java` is an older/simple Java backend and is not the main application backend. It is just a record of a previous iterattion of a backend.
+- `watchvault-backend-springboot` is the main backend that the app runs on. `backend-java` is an older/simple Java backend and is not the main application backend. It is just a record of a previous iteration of a backend.
 - Generated folders such as `dist`, `target`, `out`, `playwright-report`, and `test-results` are build/test outputs.
