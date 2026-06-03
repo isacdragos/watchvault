@@ -83,6 +83,17 @@ public class ShowController {
         return showService.updateShow(user.getUsername(), id, request);
     }
 
+    @PostMapping("/{id}")
+    public ShowResponse updateShowViaPost(
+            @RequestHeader("Authorization") String authorization,
+            @PathVariable Long id,
+            @Valid @RequestBody ShowRequest request
+    ) {
+        UserEntity user = authSessionService.requireAuthenticatedUser(authorization);
+        userAccessService.requirePermission(user, UserAccessService.SHOW_WRITE_PERMISSION);
+        return showService.updateShow(user.getUsername(), id, request);
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteShow(

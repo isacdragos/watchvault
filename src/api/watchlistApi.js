@@ -216,7 +216,7 @@ export async function createShow(show) {
 
 export async function updateShow(showId, show) {
   const updatedShow = await apiRequest(`/api/shows/${showId}`, {
-    method: "PUT",
+    method: "POST",
     body: JSON.stringify(mapShowToBackend(show)),
   });
 

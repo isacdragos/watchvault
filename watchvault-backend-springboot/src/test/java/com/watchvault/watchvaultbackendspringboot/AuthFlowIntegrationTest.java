@@ -1,6 +1,7 @@
 package com.watchvault.watchvaultbackendspringboot;
 
 import com.watchvault.watchvaultbackendspringboot.dto.AuthRequest;
+import com.watchvault.watchvaultbackendspringboot.dto.ShowRequest;
 import com.watchvault.watchvaultbackendspringboot.entity.AuthSessionEntity;
 import com.watchvault.watchvaultbackendspringboot.repository.AuthSessionRepository;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -95,6 +97,27 @@ class AuthFlowIntegrationTest {
         assertThat(rejected.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
+    @Test
+    void postToShowIdUpdatesExistingShow() throws Exception {
+        String session = signup("editor", "Password123!", "Password123!");
+        String token = extractString(session, "token");
+
+        HttpResponse<String> created = postJson("/api/shows", showRequest("Arcane", "watching", 3), token);
+        assertThat(created.statusCode()).isEqualTo(HttpStatus.OK.value());
+
+        String id = extractNumber(created.body(), "id");
+        HttpResponse<String> updated = postJson(
+                "/api/shows/" + id,
+                showRequest("Arcane: League of Legends", "completed", 9),
+                token
+        );
+
+        assertThat(updated.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(extractString(updated.body(), "title")).isEqualTo("Arcane: League of Legends");
+        assertThat(extractString(updated.body(), "status")).isEqualTo("completed");
+        assertThat(extractNumber(updated.body(), "episodesWatched")).isEqualTo("9");
+    }
+
     private String signup(String username, String password, String confirmPassword) throws Exception {
         HttpResponse<String> response = postJson("/api/auth/signup", authRequest(username, password, confirmPassword));
 
@@ -117,9 +140,33 @@ class AuthFlowIntegrationTest {
         return request;
     }
 
+    private ShowRequest showRequest(String title, String status, int episodesWatched) {
+        ShowRequest request = new ShowRequest();
+        request.setTitle(title);
+        request.setType("series");
+        request.setStatus(status);
+        request.setDescription("Animated fantasy drama with strong characters.");
+        request.setReleaseDate(LocalDate.of(2021, 11, 6));
+        request.setImage("data:image/png;base64,abc");
+        request.setEpisodesWatched(episodesWatched);
+        request.setTotalEpisodes(9);
+        request.setRating(9.5);
+        return request;
+    }
+
     private HttpResponse<String> postJson(String path, AuthRequest body) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder(URI.create(url(path)))
                 .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(body)))
+                .build();
+
+        return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
+    private HttpResponse<String> postJson(String path, ShowRequest body, String token) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder(URI.create(url(path)))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
                 .POST(HttpRequest.BodyPublishers.ofString(toJson(body)))
                 .build();
 
@@ -150,8 +197,41 @@ class AuthFlowIntegrationTest {
         return json.toString();
     }
 
+    private String toJson(ShowRequest request) {
+        return """
+                {
+                  "title":"%s",
+                  "type":"%s",
+                  "status":"%s",
+                  "description":"%s",
+                  "releaseDate":"%s",
+                  "image":"%s",
+                  "episodesWatched":%d,
+                  "totalEpisodes":%d,
+                  "rating":%.1f
+                }
+                """.formatted(
+                escapeJson(request.getTitle()),
+                escapeJson(request.getType()),
+                escapeJson(request.getStatus()),
+                escapeJson(request.getDescription()),
+                request.getReleaseDate(),
+                escapeJson(request.getImage()),
+                request.getEpisodesWatched(),
+                request.getTotalEpisodes(),
+                request.getRating()
+        );
+    }
+
     private String extractString(String json, String fieldName) {
         Pattern pattern = Pattern.compile("\"" + Pattern.quote(fieldName) + "\"\\s*:\\s*\"([^\"]*)\"");
+        Matcher matcher = pattern.matcher(json);
+        assertThat(matcher.find()).isTrue();
+        return matcher.group(1);
+    }
+
+    private String extractNumber(String json, String fieldName) {
+        Pattern pattern = Pattern.compile("\"" + Pattern.quote(fieldName) + "\"\\s*:\\s*(\\d+)");
         Matcher matcher = pattern.matcher(json);
         assertThat(matcher.find()).isTrue();
         return matcher.group(1);
