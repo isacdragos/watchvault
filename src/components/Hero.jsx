@@ -1,5 +1,16 @@
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 import './Hero.css';
+
 export default function Hero() {
+  const { isAuthenticated } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleJoinClick = () => {
+    navigate(isAuthenticated ? "/watchlist" : "/login");
+  };
+
   return (
     <section className="hero">
       <div className="hero-box">
@@ -14,7 +25,7 @@ export default function Hero() {
             Build your personal watchlist, rate what you've watched,<br />
             and never forget what to watch next.
           </p>
-          <button className="cta">Join now</button>
+          <button className="cta" type="button" onClick={handleJoinClick}>Join now</button>
         </div>
       </div>
     </section>
