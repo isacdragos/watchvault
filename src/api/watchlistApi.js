@@ -229,6 +229,10 @@ export async function deleteShow(showId) {
   });
 }
 
+export async function fetchStats() {
+  return apiRequest("/api/stats", { method: "GET" });
+}
+
 export async function fetchAdminUsers() {
   return apiRequest("/api/admin/users", { method: "GET" });
 }

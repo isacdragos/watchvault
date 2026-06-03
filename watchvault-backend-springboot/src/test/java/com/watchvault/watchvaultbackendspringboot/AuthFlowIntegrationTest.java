@@ -118,6 +118,45 @@ class AuthFlowIntegrationTest {
         assertThat(extractNumber(updated.body(), "episodesWatched")).isEqualTo("9");
     }
 
+    @Test
+    void statsIncludeWatchTimeAndGroupedCounts() throws Exception {
+        String session = signup("stats-user", "Password123!", "Password123!");
+        String token = extractString(session, "token");
+
+        assertThat(postJson("/api/shows", showRequest("Arcane", "completed", 9), token).statusCode())
+                .isEqualTo(HttpStatus.OK.value());
+        assertThat(postJson("/api/shows", showRequest("Frieren", "watching", 12), token).statusCode())
+                .isEqualTo(HttpStatus.OK.value());
+
+        HttpResponse<String> stats = get("/api/stats", token);
+
+        assertThat(stats.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(stats.body()).contains(
+                "\"totalShows\":2",
+                "\"episodesWatched\":21",
+                "\"daysWatched\":0.4",
+                "\"completed\":1",
+                "\"watching\":1",
+                "\"series\":2"
+        );
+    }
+
+    @Test
+    void statsCountTotalEpisodesForAnyStatusWhenWatchedCountIsZero() throws Exception {
+        String session = signup("fallback-stats-user", "Password123!", "Password123!");
+        String token = extractString(session, "token");
+
+        assertThat(postJson("/api/shows", showRequest("Watching Show", "watching", 0), token).statusCode())
+                .isEqualTo(HttpStatus.OK.value());
+        assertThat(postJson("/api/shows", showRequest("Planned Show", "plan-to-watch", 0), token).statusCode())
+                .isEqualTo(HttpStatus.OK.value());
+
+        HttpResponse<String> stats = get("/api/stats", token);
+
+        assertThat(stats.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(stats.body()).contains("\"episodesWatched\":18", "\"daysWatched\":0.3");
+    }
+
     private String signup(String username, String password, String confirmPassword) throws Exception {
         HttpResponse<String> response = postJson("/api/auth/signup", authRequest(username, password, confirmPassword));
 

@@ -11,6 +11,7 @@ export default function Navbar() {
       <div className="nav-left">
         <Link to="/">Home</Link>
         <Link to="/watchlist">My List</Link>
+        <Link to="/stats">Stats</Link>
         {isAdmin ? <Link to="/admin">Admin</Link> : null}
       </div>
 

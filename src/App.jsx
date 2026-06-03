@@ -6,6 +6,7 @@ import { SignupPage } from "./pages/SignupPage";
 import { Watchlist } from "./pages/Watchlist";
 import { ShowDetails } from "./pages/ShowDetails";
 import { AdminPage } from "./pages/AdminPage";
+import { StatsPage } from "./pages/StatsPage";
 import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useActivityTracker } from "./utils/userTracking";
@@ -33,6 +34,14 @@ function AppRoutes() {
           element={(
             <ProtectedRoute>
               <ShowDetails />
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/stats"
+          element={(
+            <ProtectedRoute>
+              <StatsPage />
             </ProtectedRoute>
           )}
         />

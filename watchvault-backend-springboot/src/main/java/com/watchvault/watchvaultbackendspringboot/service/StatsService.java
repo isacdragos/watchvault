@@ -15,6 +15,7 @@ import java.util.Map;
 
 @Service
 public class StatsService {
+    private static final double AVERAGE_EPISODE_MINUTES = 25.0;
 
     private final UserRepository userRepository;
     private final ShowRepository showRepository;
@@ -32,6 +33,10 @@ public class StatsService {
         List<ShowEntity> shows = showRepository.findByUserId(user.getId(), Pageable.unpaged()).getContent();
 
         long totalShows = shows.size();
+        long episodesWatched = shows.stream()
+                .mapToLong(this::watchedEpisodesForStats)
+                .sum();
+        double daysWatched = Math.round((episodesWatched * AVERAGE_EPISODE_MINUTES / 1440.0) * 10.0) / 10.0;
 
         Double averageRating = shows.stream()
                 .map(ShowEntity::getRating)
@@ -55,9 +60,27 @@ public class StatsService {
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("totalShows", totalShows);
         response.put("averageRating", averageRating);
+        response.put("episodesWatched", episodesWatched);
+        response.put("daysWatched", daysWatched);
         response.put("byStatus", byStatus);
         response.put("byType", byType);
 
         return response;
+    }
+
+    private long watchedEpisodesForStats(ShowEntity show) {
+        Integer episodesWatched = show.getEpisodesWatched();
+
+        if (episodesWatched != null && episodesWatched > 0) {
+            return episodesWatched;
+        }
+
+        Integer totalEpisodes = show.getTotalEpisodes();
+
+        if (totalEpisodes != null && totalEpisodes > 0) {
+            return totalEpisodes;
+        }
+
+        return 0;
     }
 }
