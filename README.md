@@ -131,11 +131,12 @@ $env:DATABASE_USERNAME="postgres"
 $env:DATABASE_PASSWORD="your_password"
 ```
 
-By default, the backend runs on port `8080`. To use another port:
+By default, the backend runs on port `8443`. To use another port:
 
 ```powershell
-$env:PORT="8443"
+$env:PORT="8080"
 ```
+If the backend port is changed, the BACKEND_PROXY_TARGET in '.env' needs to be changed as well
 
 ## Running Locally
 
@@ -164,14 +165,7 @@ Open the Vite URL shown in the terminal, usually:
 https://localhost:5173
 ```
 
-Note: `watchvault-backend-springboot/src/main/resources/application.properties` might need changes so that an ssl certificate may be used. A good configuration could look like this:
-```properties
-server.ssl.enabled=true
-server.ssl.key-store=classpath:ssl/watchvault-local.p12
-server.ssl.key-store-password=watchvault
-server.ssl.key-store-type=PKCS12
-server.ssl.key-alias=watchvault-local
-```
+
 
 ## Production Build
 
