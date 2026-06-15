@@ -1,15 +1,16 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { fetchShowById } from "../api/watchlistApi";
 import { WatchlistContext } from "../context/WatchlistContext";
 import "./WatchTable.css";
 import { getCookie, setCookie } from "../utils/cookies";
-
-const fallbackPoster = "https://placehold.co/90x135/111111/e8e8e8?text=Poster";
 
 export function WatchTable({ activeTab, activeType, sortBy }) {
   const { shows } = useContext(WatchlistContext);
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
+  const [posters, setPosters] = useState({});
+  const posterRequests = useRef(new Set());
   const pageSize = 8;
 
   const filtered = shows.filter((s) => {
@@ -54,6 +55,23 @@ export function WatchTable({ activeTab, activeType, sortBy }) {
     navigate(`/watchlist/${showId}`);
   };
 
+  const loadPoster = async (showId) => {
+    if (Object.hasOwn(posters, showId) || posterRequests.current.has(showId)) {
+      return;
+    }
+
+    posterRequests.current.add(showId);
+
+    try {
+      const show = await fetchShowById(showId);
+      setPosters((current) => ({ ...current, [showId]: show.image || null }));
+    } catch {
+      setPosters((current) => ({ ...current, [showId]: null }));
+    } finally {
+      posterRequests.current.delete(showId);
+    }
+  };
+
   return (
     <div className="watch-table">
       <table>
@@ -73,11 +91,17 @@ export function WatchTable({ activeTab, activeType, sortBy }) {
                 className="clickable-row"
                 tabIndex={0}
                 onClick={() => openDetails(s.id)}
+                onMouseEnter={() => loadPoster(s.id)}
+                onFocus={() => loadPoster(s.id)}
               >
                 <td className="title-cell">
                   <span>{s.title}</span>
-                  <div className="row-poster-preview">
-                    <img src={s.image || fallbackPoster} alt={`${s.title} poster`} loading="lazy" />
+                  <div className="row-poster-preview" aria-hidden="true">
+                    {posters[s.id] ? (
+                      <img src={posters[s.id]} alt="" />
+                    ) : (
+                      <span>{Object.hasOwn(posters, s.id) ? "No poster" : "Loading..."}</span>
+                    )}
                   </div>
                 </td>
                 <td>{s.score}</td>

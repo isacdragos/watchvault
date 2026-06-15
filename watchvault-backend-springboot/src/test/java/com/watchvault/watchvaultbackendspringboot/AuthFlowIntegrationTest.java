@@ -83,6 +83,28 @@ class AuthFlowIntegrationTest {
     }
 
     @Test
+    void showListOmitsHeavyFieldsButDetailsIncludeThem() throws Exception {
+        String session = signup("list-performance-user", "Password123!", "Password123!");
+        String token = extractString(session, "token");
+
+        HttpResponse<String> created = postJson("/api/shows", showRequest("Poster Test", "watching", 3), token);
+        String id = extractNumber(created.body(), "id");
+
+        HttpResponse<String> list = get("/api/shows?size=100", token);
+        HttpResponse<String> details = get("/api/shows/" + id, token);
+
+        assertThat(list.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(list.body()).contains("\"title\":\"Poster Test\"", "\"image\":null", "\"description\":null");
+        assertThat(list.body()).doesNotContain("data:image/png;base64,abc");
+
+        assertThat(details.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(details.body()).contains(
+                "\"image\":\"data:image/png;base64,abc\"",
+                "\"description\":\"Animated fantasy drama with strong characters.\""
+        );
+    }
+
+    @Test
     void expiredSessionIsRejectedAndDeleted() throws Exception {
         String session = signup("timedout", "Password123!", "Password123!");
         AuthSessionEntity storedSession = authSessionRepository.findAll().stream()

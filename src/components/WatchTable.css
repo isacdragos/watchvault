@@ -59,7 +59,19 @@
   object-fit: cover;
 }
 
-.watch-table tbody tr:hover .row-poster-preview {
+.row-poster-preview span {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  color: #888;
+  font-size: 12px;
+  text-align: center;
+}
+
+.watch-table tbody tr:hover .row-poster-preview,
+.watch-table tbody tr:focus-visible .row-poster-preview {
   opacity: 1;
   transform: translate(-8px, -50%) scale(1);
 }
@@ -145,3 +157,4 @@
     display: none;
   }
 }
+

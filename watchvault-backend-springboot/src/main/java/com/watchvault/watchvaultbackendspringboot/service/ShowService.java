@@ -5,6 +5,7 @@ import com.watchvault.watchvaultbackendspringboot.dto.ShowResponse;
 import com.watchvault.watchvaultbackendspringboot.entity.ShowEntity;
 import com.watchvault.watchvaultbackendspringboot.entity.UserEntity;
 import com.watchvault.watchvaultbackendspringboot.error.NotFoundException;
+import com.watchvault.watchvaultbackendspringboot.repository.ShowListView;
 import com.watchvault.watchvaultbackendspringboot.repository.ShowRepository;
 import com.watchvault.watchvaultbackendspringboot.repository.UserRepository;
 import org.springframework.data.domain.Page;
@@ -47,10 +48,10 @@ public class ShowService {
         } else if (hasSearch) {
             result = showRepository.findByUserIdAndTitleContainingIgnoreCase(user.getId(), search, pageable);
         } else {
-            result = showRepository.findByUserId(user.getId(), pageable);
+            return showRepository.findListByUserId(user.getId(), pageable).map(this::toListResponse);
         }
 
-        return result.map(this::toResponse);
+        return result.map(this::toListResponse);
     }
 
     @Transactional(readOnly = true)
@@ -121,6 +122,40 @@ public class ShowService {
                 show.getDescription(),
                 show.getReleaseDate(),
                 show.getImage(),
+                show.getEpisodesWatched(),
+                show.getTotalEpisodes(),
+                show.getRating(),
+                show.getCreatedAt(),
+                show.getUpdatedAt()
+        );
+    }
+
+    private ShowResponse toListResponse(ShowEntity show) {
+        return new ShowResponse(
+                show.getId(),
+                show.getTitle(),
+                show.getType(),
+                show.getStatus(),
+                null,
+                show.getReleaseDate(),
+                null,
+                show.getEpisodesWatched(),
+                show.getTotalEpisodes(),
+                show.getRating(),
+                show.getCreatedAt(),
+                show.getUpdatedAt()
+        );
+    }
+
+    private ShowResponse toListResponse(ShowListView show) {
+        return new ShowResponse(
+                show.getId(),
+                show.getTitle(),
+                show.getType(),
+                show.getStatus(),
+                null,
+                show.getReleaseDate(),
+                null,
                 show.getEpisodesWatched(),
                 show.getTotalEpisodes(),
                 show.getRating(),
